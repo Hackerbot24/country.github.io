@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <title>Where in the world?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #111517;
+            --element-color: #ffffff;
+            --input-color: #858585;
+            --shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --bg-color: #202c37;
+            --text-color: #ffffff;
+            --element-color: #2b3945;
+            --input-color: #ffffff;
+            --shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--element-color);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .theme-switcher {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-switcher i {
+            margin-right: 8px;
+        }
+
+        main {
+            padding: 40px 5%;
+        }
+
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 40%;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--element-color);
+            color: var(--text-color);
+            box-shadow: var(--shadow);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--input-color);
+        }
+
+        .filter-container {
+            position: relative;
+        }
+
+        .filter-button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--element-color);
+            color: var(--text-color);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--element-color);
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .filter-options.show {
+            display: block;
+        }
+
+        .filter-options div {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+        }
+
+        .country-card {
+            background-color: var(--element-color);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .country-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .country-flag {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .country-info {
+            padding: 20px;
+        }
+
+        .country-name {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .country-details p {
+            margin-bottom: 5px;
+        }
+
+        .country-details span {
+            font-weight: 600;
+        }
+
+        .country-page {
+            display: none;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 30px;
+            background-color: var(--element-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .country-details-container {
+            display: flex;
+            gap: 80px;
+        }
+
+        .country-flag-large {
+            width: 45%;
+            max-width: 560px;
+        }
+
+        .country-details-info {
+            flex: 1;
+        }
+
+        .country-details-name {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .country-details-columns {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .country-details-column {
+            flex: 1;
+        }
+
+        .country-details-item {
+            margin-bottom: 10px;
+        }
+
+        .country-details-item span {
+            font-weight: 600;
+        }
+
+        .border-countries {
+            margin-top: 40px;
+        }
+
+        .border-countries-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .border-countries-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .border-country {
+            padding: 5px 20px;
+            background-color: var(--element-color);
+            box-shadow: var(--shadow);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: var(--element-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        @media (max-width: 768px) {
+            .search-filter {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .country-details-container {
+                flex-direction: column;
+            }
+
+            .country-flag-large {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Where in the world?</h1>
+        <div class="theme-switcher">
+            <i class="fas fa-moon"></i>
+            <span>Dark Mode</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="countries-page">
+            <div class="search-filter">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for a country...">
+                </div>
+                <div class="filter-container">
+                    <button class="filter-button">Filter by Region <i class="fas fa-chevron-down"></i></button>
+                    <div class="filter-options">
+                        <div data-region="all">All</div>
+                        <div data-region="Africa">Africa</div>
+                        <div data-region="Americas">Americas</div>
+                        <div data-region="Asia">Asia</div>
+                        <div data-region="Europe">Europe</div>
+                        <div data-region="Oceania">Oceania</div>
+                    </div>
+                </div>
+            </div>
+            <div class="countries-grid"></div>
+        </div>
+
+        <div class="country-page">
+            <a href="#" class="back-button"><i class="fas fa-arrow-left"></i> Back</a>
+            <div class="country-details-container"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Where in the world? All rights reserved.</p>
+        Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+        Coded by <a href="https://github.com/Hackerbot24">Hackerbot24</a>.
+    </footer>
+
+    <script>
+        const countriesGrid = document.querySelector('.countries-grid');
+        const countryPage = document.querySelector('.country-page');
+        const countriesPage = document.querySelector('.countries-page');
+        const searchInput = document.querySelector('.search-container input');
+        const filterButton = document.querySelector('.filter-button');
+        const filterOptions = document.querySelector('.filter-options');
+        const backButton = document.querySelector('.back-button');
+        const themeSwitcher = document.querySelector('.theme-switcher');
+        let countriesData = [];
+
+        // Fetch countries data
+        fetch('https://restcountries.com/v3.1/all')
+            .then(response => response.json())
+            .then(data => {
+                countriesData = data;
+                displayCountries(countriesData);
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+
+        // Display countries
+        function displayCountries(countries) {
+            countriesGrid.innerHTML = '';
+            countries.forEach(country => {
+                const countryCard = document.createElement('div');
+                countryCard.classList.add('country-card');
+                countryCard.innerHTML = `
+                    <img src="${country.flags.png}" alt="${country.name.common} flag" class="country-flag">
+                    <div class="country-info">
+                        <h2 class="country-name">${country.name.common}</h2>
+                        <div class="country-details">
+                            <p><span>Population:</span> ${country.population.toLocaleString()}</p>
+                            <p><span>Region:</span> ${country.region}</p>
+                            <p><span>Capital:</span> ${country.capital?.[0] || 'N/A'}</p>
+                        </div>
+                    </div>
+                `;
+                countryCard.addEventListener('click', () => showCountryDetails(country));
+                countriesGrid.appendChild(countryCard);
+            });
+        }
+
+        // Show country details
+        function showCountryDetails(country) {
+            countriesPage.style.display = 'none';
+            countryPage.style.display = 'block';
+            const detailsContainer = document.querySelector('.country-details-container');
+            detailsContainer.innerHTML = `
+                <img src="${country.flags.svg}" alt="${country.name.common} flag" class="country-flag-large">
+                <div class="country-details-info">
+                    <h2 class="country-details-name">${country.name.common}</h2>
+                    <div class="country-details-columns">
+                        <div class="country-details-column">
+                            <p class="country-details-item"><span>Native Name:</span> ${Object.values(country.name.nativeName)[0].common}</p>
+                            <p class="country-details-item"><span>Population:</span> ${country.population.toLocaleString()}</p>
+                            <p class="country-details-item"><span>Region:</span> ${country.region}</p>
+                            <p class="country-details-item"><span>Sub Region:</span> ${country.subregion}</p>
+                            <p class="country-details-item"><span>Capital:</span> ${country.capital?.[0] || 'N/A'}</p>
+                        </div>
+                        <div class="country-details-column">
+                            <p class="country-details-item"><span>Top Level Domain:</span> ${country.tld?.[0]}</p>
+                            <p class="country-details-item"><span>Currencies:</span> ${Object.values(country.currencies).map(c => c.name).join(', ')}</p>
+                            <p class="country-details-item"><span>Languages:</span> ${Object.values(country.languages).join(', ')}</p>
+                        </div>
+                    </div>
+                    <div class="border-countries">
+                        <h3 class="border-countries-title">Border Countries:</h3>
+                        <div class="border-countries-list">
+                            ${country.borders ? country.borders.map(border => `<div class="border-country">${border}</div>`).join('') : 'No border countries'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredCountries = countriesData.filter(country => 
+                country.name.common.toLowerCase().includes(searchTerm) ||
+                country.region.toLowerCase().includes(searchTerm)
+            );
+            displayCountries(filteredCountries);
+        });
+
+        // Filter functionality
+        filterButton.addEventListener('click', () => {
+            filterOptions.classList.toggle('show');
+        });
+
+        filterOptions.addEventListener('click', (e) => {
+            if (e.target.hasAttribute('data-region')) {
+                const region = e.target.getAttribute('data-region');
+                const filteredCountries = region === 'all' ? countriesData : countriesData.filter(country => country.region === region);
+                displayCountries(filteredCountries);
+                filterOptions.classList.remove('show');
+                filterButton.textContent = region === 'all' ? 'Filter by Region' : region;
+            }
+        });
+
+        // Back button functionality
+        backButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            countryPage.style.display = 'none';
+            countriesPage.style.display = 'block';
+        });
+
+        // Theme switcher functionality
+        themeSwitcher.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeSwitcher.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                themeSwitcher.querySelector('span').textContent = 'Light Mode';
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                themeSwitcher.querySelector('span').textContent = 'Dark Mode';
+            }
+        });
+
+        // Close filter options when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!filterButton.contains(e.target) && !filterOptions.contains(e.target)) {
+                filterOptions.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
